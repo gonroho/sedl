@@ -1,1 +1,15 @@
-{"@type":"BasicExperiment","notes":[],"annotations":[],"id":"Empty_Experiment","metaid":null,"name":"Empty_Experiment","version":"1.0.0-SNAPSHOT","context":null,"hypothesis":null,"design":null,"configurations":[]}
+{
+  "@type" : "ControlledExperiment",
+  "notes" : [ ],
+  "annotations" : [ ],
+  "id" : "Empty_Experiment",
+  "goal" : null,
+  "context" : null,
+  "metaid" : null,
+  "name" : "Empty_Experiment",
+  "version" : "1.0.0-SNAPSHOT",
+  "design" : null,
+  "configurations" : [ ],
+  "hypotheses" : [ ],
+  "abstract" : null
+}

@@ -1,1 +1,35 @@
-{"@type":"BasicExperiment","notes":[],"annotations":[],"id":"SimpleCommandExperiment","metaid":null,"name":"SimpleCommandExperiment","version":"1.0.0-SNAPSHOT","context":null,"hypothesis":null,"design":null,"configurations":[{"notes":[],"annotations":[],"id":"executableConfig","context":null,"experimentalProcedure":{"tasks":[{"@type":"CommandExperimentalTask","parameters":["DONE"],"name":"mkdir","path":""}]},"experimentalSetting":null,"experimentalInputs":null,"experimentalOutputs":null,"parameters":[],"executions":[]}]}
+{
+  "@type" : "ControlledExperiment",
+  "notes" : [ ],
+  "annotations" : [ ],
+  "id" : "SimpleCommandExperiment",
+  "goal" : null,
+  "context" : null,
+  "metaid" : null,
+  "name" : "SimpleCommandExperiment",
+  "version" : "1.0.0-SNAPSHOT",
+  "design" : null,
+  "configurations" : [ {
+    "notes" : [ ],
+    "annotations" : [ ],
+    "id" : "executableConfig",
+    "context" : null,
+    "experimentalProcedure" : {
+      "@type" : "TaskBasedExperimentalProcedure",
+      "tasks" : [ {
+        "@type" : "CommandExperimentalTask",
+        "experimentalTaskType" : null,
+        "parameters" : [ "DONE" ],
+        "name" : "mkdir",
+        "path" : ""
+      } ]
+    },
+    "experimentalSetting" : null,
+    "experimentalInputs" : null,
+    "experimentalOutputs" : null,
+    "parameters" : [ ],
+    "executions" : [ ]
+  } ],
+  "hypotheses" : [ ],
+  "abstract" : null
+}

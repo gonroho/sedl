@@ -14,7 +14,7 @@
                 <module>modules/SEDL4JSON</module>
                 <!--<module>modules/SEDLAnalyzer</module>-->
                 <module>modules/SEDLModuleManager</module>
-		
+		<module>modules/R4SEDL</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

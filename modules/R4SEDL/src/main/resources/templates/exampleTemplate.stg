@@ -1,0 +1,17 @@
+templateExample(rfuns) ::= <<
+data = read.csv("C:/Users/user/Desktop/examples/dataset.csv", header=T, sep=";")
+<rfuns :{ rfun | <rfun>}>
+>>
+simpleWhich(fun, rvar, outvar) ::= <<
+<fun>(data[ which(data$<rvar>,]$<outvar>)
+
+>>
+complexAggr(fun, varfun, outvar) ::= <<
+datagroupby \<- aggregate(data$<outvar>, by=list(data$<varfun>), FUN=<fun>)
+datagroupby
+
+>>
+noFilter(fun, outvar) ::= <<
+<fun>(data$<outvar>)
+
+>>

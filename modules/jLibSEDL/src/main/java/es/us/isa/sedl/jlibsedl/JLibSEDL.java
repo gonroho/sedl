@@ -151,8 +151,10 @@ public class JLibSEDL {
                 List<String> marshallingErrors = marshaller.write(exp, stream);
                 stream.flush();
                 stream.close();
-                for (String error : marshallingErrors) {
-                    errors.add(new Error(0, Error.ERROR_SEVERITY.FATAL, "["+marshaller.getClass().getSimpleName()+" ERROR]:" + error));
+                if (marshallingErrors!=null){
+	                for (String error : marshallingErrors) {
+	                    errors.add(new Error(0, Error.ERROR_SEVERITY.FATAL, "["+marshaller.getClass().getSimpleName()+" ERROR]:" + error));
+	                }
                 }
             } catch (IOException ex) {
                 Logger.getLogger(JLibSEDL.class.getName()).log(Level.SEVERE, null, ex);
