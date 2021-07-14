@@ -1,0 +1,60 @@
+import Charts
+EXPERIMENT: Mind-2 version: 1.0 
+Subjects:
+	Beatriz Bernardez Jimenez (beat@us.es) from 'University of Sevilla' as Responsible
+	Amador Duran Toro (amador@us.es) from 'University of Sevilla' as Collaborator
+	Jose Antonio Parejo Maestre (japarejo@us.es) from 'University of Sevilla' as Collaborator
+	Antonio Ruiz-Cortes (aruiz@us.es) from 'University of Sevilla' as Collaborator
+Constants:
+	NSessions : 16
+	SessionsDuration : 10 measured in minutes
+Variables :
+	Factors :
+		treatment enum
+			 'MF',
+			 'PS'
+		exercise enum
+Number of words in the interview transcript: 951
+Number of classes ($CLASS_R$):               8
+Number of associations ($ASSOC_R$):          10
+Number of attributes ( $ATTR_R$):            17
+Average number of attributes per class:      2,29*/
+			 'Erasmus',
+			 'EoDP'
+	Outcome :
+		Effectiveness float 
+		Efficiency float range [0,1] 
+Hypothesis: 
+	H1: treatment impacts significantly on Effectiveness
+	H2: treatment impacts significantly on Efficiency
+Design :
+	Sampling : Random
+	Assignment : Custom
+	Groups : G-MF() sizing 16,G-PS() sizing 16
+	Protocol : 
+		Measurement G-PS(exercise:'Erasmus' )
+		Measurement G-MF(exercise:'Erasmus' )
+		Treatment G-MF(treatment:'MF' )
+		Treatment G-PS(treatment:'PS' )
+		Measurement G-PS(exercise:'EoDP' )
+		Measurement G-MF(exercise:'EoDP' )
+
+	Analyses :
+		DescriptiveStatitics:
+			Avg(by exercise)
+			Avg(by treatment)
+			Avg(by treatment,exercise)
+			Median(by treatment,exercise)
+			StdDev(by treatment,exercise)
+		NHST:
+			Kolmogorov-Smirnov(by exercise,treatment, 0.05)
+			Levene(by exercise,treatment, 0.05)
+			TTest(where exercise='EoDP' by treatment, 0.05)
+			Wilcoxon(where exercise='EoDP' by treatment, 0.05)
+Configuration:
+	C1:
+		Procedure :
+		Runs:
+			Baseline:
+				Result:
+					File: 'data/data2014.csv'

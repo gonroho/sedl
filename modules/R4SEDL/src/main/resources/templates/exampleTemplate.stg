@@ -1,6 +1,6 @@
-templateExample(rfuns) ::= <<
-data = read.csv("C:/Users/user/Desktop/examples/dataset.csv", header=T, sep=";")
-<rfuns :{ rfun | <rfun>}>
+pathTemplate(path) ::= <<
+data = read.csv("<path>", header=T, sep=";")
+
 >>
 simpleWhich(fun, rvar, outvar) ::= <<
 <fun>(data[ which(data$<rvar>,]$<outvar>)

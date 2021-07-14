@@ -1,18 +1,25 @@
 package Rwriter;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import es.us.isa.sedl.core.ControlledExperiment;
 import es.us.isa.sedl.core.EmpiricalStudy;
+import es.us.isa.sedl.core.analysis.statistic.Nhst;
 import es.us.isa.sedl.core.analysis.statistic.Statistic;
 import es.us.isa.sedl.core.analysis.statistic.StatisticalAnalysisSpec;
+import es.us.isa.sedl.core.configuration.Configuration;
+import es.us.isa.sedl.core.configuration.ExperimentalOutputs;
+import es.us.isa.sedl.core.configuration.OutputDataSource;
+import es.us.isa.sedl.core.configuration.OutputDataSourceRole;
 import es.us.isa.sedl.core.design.Design;
 import es.us.isa.sedl.core.design.FullySpecifiedExperimentalDesign;
 import es.us.isa.sedl.core.design.Outcome;
@@ -27,8 +34,33 @@ public class test {
 	static String fileName = "C:\\Users\\user\\git\\sedl\\modules\\R4SEDL\\src\\main\\resources\\scriptsR\\test.r";
 	
 	public static void main(String[] args) throws IOException {
-		test6();
+		executeR(); 
 		
+	}
+	public static void executeR() throws IOException {
+// Copiado de "https://stackoverflow.com/questions/5711084/java-runtime-getruntime-getting-output-from-executing-a-command-line-program"
+		Runtime rt = Runtime.getRuntime();
+		String command = "C:\\Program Files\\R\\R-4.0.4\\bin\\Rscript " +fileName;
+		Process proc = rt.exec(command);
+
+		BufferedReader stdInput = new BufferedReader(new 
+		     InputStreamReader(proc.getInputStream()));
+
+		BufferedReader stdError = new BufferedReader(new 
+		     InputStreamReader(proc.getErrorStream()));
+
+		// Read the output from the command
+		System.out.println("Here is the standard output of the command:\n");
+		String s = null;
+		while ((s = stdInput.readLine()) != null) {
+		    System.out.println(s);
+		}
+
+		// Read any errors from the attempted command
+		System.out.println("Here is the standard error of the command (if any):\n");
+		while ((s = stdError.readLine()) != null) {
+		    System.out.println(s);
+		}
 	}
 	public static void test3() throws IOException {
 		String text=
@@ -136,14 +168,27 @@ public class test {
         }
 //        System.out.println("Funciones: " + funs);
         
-        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
-        writer.write("data = read.csv(\"C:/Users/user/Desktop/examples/dataset.csv\", header=T, sep=\";\")"+ "\n");
-	    
-        for (int i=0;i<rfuns.size();i++) {
-        	writer.write(rfuns.get(i)+"\n");
-        }
-        writer.close();
-        System.out.println("Archivo R creado");
+//        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+//        writer.write("data = read.csv(\"C:/Users/user/Desktop/examples/dataset.csv\", header=T, sep=\";\")"+ "\n");
+//	    
+//        for (int i=0;i<rfuns.size();i++) {
+//        	writer.write(rfuns.get(i)+"\n");
+//        }
+//        writer.close();
+        StatisticalAnalysisSpec nhst=(StatisticalAnalysisSpec) design.getExperimentalDesign().getIntendedAnalyses().get(1);
+        Nhst n = (Nhst) nhst.getStatistic().get(0);
+        
+        System.out.println("StDistrib "+n.getStatisticalDistribution());
+        System.out.println("Alpha "+n.getAlpha());
+        System.out.println("PHoc "+n.getPostHoc());
+        System.out.println("Name "+n.getName());
+        System.out.println("Annota "+n.getAnnotations());
+        System.out.println("Assump "+n.getAssumptions());
+        System.out.println("fil "+n.getDatasetSpecification().getFilters());
+        System.out.println("Filters "+n.getDatasetSpecification().getGroupings().get(0).getClass().getSimpleName());
+        System.out.println("Filters "+n.getDatasetSpecification().getGroupings().get(0).getProjectedVariables().get(0));
+        System.out.println("Notes "+n.getNotes());
+        
         
 	}
 	public static void test6() throws IOException {
@@ -153,10 +198,25 @@ public class test {
         SEDLDocument result = null;
         result = es.us.isa.sedl.jlibsedl.JLibSEDL.readDocument(f);
 		
-        ControlledExperiment experiment = (ControlledExperiment) result.getExperiment();
+        ControlledExperiment experiment = (ControlledExperiment) result.getExperiment(); 
+      
+//      ------------------------ Añadir Path ------------------
+        es.us.isa.sedl.core.configuration.File source= new es.us.isa.sedl.core.configuration.File();
+        source.setPath("C:/Users/user/Desktop/examples/dataset.csv");
+        List<OutputDataSource> outputDataSources = new ArrayList<OutputDataSource>();
+        OutputDataSource fuente = new OutputDataSource();
+        fuente.setFile(source);
+        fuente.setRole(OutputDataSourceRole.MAIN_RESULT);
+        outputDataSources.add(fuente);
+        ExperimentalOutputs experimentaloutputs=new ExperimentalOutputs();
+        experimentaloutputs.getOutputDataSources().add(fuente);
+        Configuration config=new Configuration();
+        config.setExperimentalOutputs(experimentaloutputs);
+        experiment.getConfigurations().add(config);
         
         
-//        ---------------------------- Variables ---------------------------
+
+//      ---------------------------- Variables ---------------------------
         
         Design design= experiment.getDesign();
         
@@ -175,6 +235,17 @@ public class test {
         	outvars.add(mainVars.get(i).getName());
         }
         
+        //Sacar el path del dataset (Comprueba si hay experimental outputs y dentro de el DataSources de tipo Main Result)
+        String path="";
+        for (int i=0;i<experiment.getConfigurations().size();i++) {
+        	for (int n=0;n<experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().size();n++) {
+            	if (!experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getFile().getPath().isEmpty()&&experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getRole()==OutputDataSourceRole.MAIN_RESULT) {
+            		path = experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getFile().getPath();
+            	}
+            }
+        }
+        
+        
 //        System.out.println("Variables de Salida: " + outvars);
 //        System.out.println("Variables: " + vars);
         
@@ -189,8 +260,20 @@ public class test {
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
 	    
         final STGroup stGroup = new STGroupFile("templates/exampleTemplate.stg");
+        
+     // Pick the correct template
+		final ST pathTemplate = stGroup.getInstanceOf("pathTemplate");
 
-        writer.write("data = read.csv(\"C:/Users/user/Desktop/examples/dataset.csv\", header=T, sep=\";\")\n");
+		// Pass on values to use when rendering
+		pathTemplate.add("path", path);
+
+		// Render
+		final String render = pathTemplate.render();
+
+		// Print
+	    writer.write(render);
+		
+
         for (int i=0;i<lista2.size();i++) {
         	String fun= lista2.get(i).getClass().getSimpleName().toLowerCase();
         	fun =fun.replace("standarddeviation","sd");
@@ -221,10 +304,10 @@ public class test {
         			simpleWhich.add("outvar", outvars.get(0));
 
         			// Render
-        			final String render = simpleWhich.render();
+        			final String render1 = simpleWhich.render();
 
         			// Print
-        		    writer.write(render);
+        		    writer.write(render1);
         			
         		//Filtros complejos. Agregados
         		}else {
@@ -241,10 +324,10 @@ public class test {
         			complexAggr.add("outvar", outvars.get(0));
 
         			// Render
-        			final String render = complexAggr.render();
+        			final String render2 = complexAggr.render();
 
         			// Print
-        		    writer.write(render);
+        		    writer.write(render2);
         		}
         	//Sin filtros, la funci�n se aplica sobre la variable de Salida
         	}else {
@@ -259,10 +342,10 @@ public class test {
     			noFilter.add("outvar", outvars.get(0));
 
     			// Render
-    			final String render = noFilter.render();
+    			final String render3 = noFilter.render();
 
     			// Print
-    		    writer.write(render);
+    		    writer.write(render3);
         	}
         	rfuns.add(rfun);
 //        	fun += varfun;

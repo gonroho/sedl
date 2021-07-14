@@ -1,0 +1,23 @@
+EXPERIMENT: HeightExperiment version: 1.0 
+Variables :
+	Factors :
+		sex enum 'men', 'women'
+	Outcome :
+		height float 
+Hypothesis: 	H2: Differential
+Design :
+	Sampling : Random
+	Assignment : Random
+	Groups : 
+		by  sizing 25
+	Protocol : Random
+	Analyses :
+	A-1:
+		Avg()	Avg(where sex= )	Avg(where sex='men' )	StdDev()
+	NHST:
+		T-Student(by sex, 0.05)	ANOVA( of height by sex, 0.05)
+Configuration:
+	C0:
+
+	Outputs: File ' C:/Users/user/Desktop/examples/dataset.csv' role:MAIN_RESULT
+
