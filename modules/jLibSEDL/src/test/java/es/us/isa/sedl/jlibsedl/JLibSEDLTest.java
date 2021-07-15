@@ -27,7 +27,6 @@ import org.junit.Test;
 import es.us.isa.sedl.core.util.Error;
 import static org.junit.Assert.*;
 import static es.us.isa.sedl.jlibsedl.util.GenerateSampleExperiments.*;
-import es.us.moses.schemas.sedl.v1.Experiment;
 import java.util.Collections;
 
 /**
@@ -219,7 +218,6 @@ public class JLibSEDLTest {
         try {
             System.out.println("readDocument");
             InputStream stream = null;
-            Experiment expExperiment = null;
             SEDLDocument result = JLibSEDL.readDocument(stream, SerializationFormat.XML);
             // Simple test with a null stream:
             assertEquals(null, result.getExperiment());

@@ -13,7 +13,10 @@ Design :
 	Protocol : Random
 	Analyses :
 	A-1:
-		Avg()	Avg(where sex= )	Avg(where sex='men' )	StdDev()
+		Avg()
+		Avg(sex )
+		Avg(where sex='men' )
+		StdDev()
 Configuration:
 	C0:
 

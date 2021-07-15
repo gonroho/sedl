@@ -1030,14 +1030,16 @@ public class SEDL4PeopleMarshaller implements SEDLMarshaller {
         if (analysisSpecGroup instanceof StatisticalAnalysisSpec) {
             StatisticalAnalysisSpec ana = (StatisticalAnalysisSpec) analysisSpecGroup;
             if (!ana.getStatistic().isEmpty()) {
-                for(int i=0;i<cont;i++)
-                    sb.append(TAB);
+                
                 for (Statistic analysisSpec : ana.getStatistic()) {
-                    sb.append(TAB);
+                	for(int i=0;i<cont;i++)
+                        sb.append(TAB);
+                	sb.append(TAB);
                     String ending = "";
                     sb.append(printStatistic(analysisSpec));
+                    sb.append(RET);
                 }
-                sb.append(RET);
+                
             }
         } else {
             sb.append(analysisSpecGroup.toString());
@@ -1215,6 +1217,7 @@ public class SEDL4PeopleMarshaller implements SEDLMarshaller {
 
     private String printValuationFilter(ValuationFilter vf) {
         StringBuilder sb = new StringBuilder();
+        if(vf.getVariableValuations().size()>2 || vf.getVariableValuations().get(0).getLevel()!=null) 
         sb.append(getTokenName(
                 WHERE)
         ).append(ESP);
@@ -1227,9 +1230,10 @@ public class SEDL4PeopleMarshaller implements SEDLMarshaller {
             VariableValuation var = vf.getVariableValuations().get(j);
             if (var != null) {
                 sb.append(
-                        var.getVariable())
-                        .append("=")
-                        .append(printValue(var.getLevel()));
+                        var.getVariable());
+                		if(var.getLevel()!=null) 
+                			sb.append("=")
+                			  .append(printValue(var.getLevel()));
             }
         }
         return sb.toString();

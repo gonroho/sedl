@@ -35,7 +35,7 @@ import es.us.isa.sedl.marshaller.SEDL4PeopleMarshaller;
 import es.us.isa.sedl.marshaller.SEDL4PeopleUnmarshaller;
 
 public class testSEDLcreator {
-	static String basePath = "C:\\Users\\user\\git\\sedl\\modules\\R4SEDL\\src\\main\\resources\\SEDLfiles";
+	static String basePath = "./src/main/resources/SEDLfiles";
 	static String sourcePath =" C:/Users/user/Desktop/examples/dataset.csv";
 	
 	//al generar archivos el unmarshaller provoca errores en
@@ -46,10 +46,10 @@ public class testSEDLcreator {
 //	Y al añadir el dataset
 //  no reconoce el archivo Bernarde2014 como SEDL
 	public static void main(String[] args) throws IOException {
-		File f = new File("C:/Users/user/git/sedl/modules/R4SEDL/src/main/resources/SEDLfiles/HeightExperimentNoNhst.SEDL");
+		File f = new File("./src/main/resources/SEDLfiles/HeightExperimentNoNhst.SEDL");
 
 //		File f = new File("C:/Users/user/git/sedl/modules/R4SEDL/src/main/resources/SEDLfiles/test1.sedl");
-		
+		System.out.println(f.getAbsolutePath());
 		System.out.println(es.us.isa.sedl.jlibsedl.JLibSEDL.isSEDL(f)+"\n");
 //        SEDLDocument result = null;
 //        result = es.us.isa.sedl.jlibsedl.JLibSEDL.readDocument(f);

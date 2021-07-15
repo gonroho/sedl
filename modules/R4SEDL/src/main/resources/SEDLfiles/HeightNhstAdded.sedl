@@ -13,9 +13,13 @@ Design :
 	Protocol : Random
 	Analyses :
 	A-1:
-		Avg()	Avg(where sex= )	Avg(where sex='men' )	StdDev()
+		Avg()
+		Avg(sex )
+		Avg(where sex='men' )
+		StdDev()
 	NHST:
-		T-Student(by sex, 0.05)	ANOVA( of height by sex, 0.05)
+		T-Student(by sex, 0.05)
+		ANOVA( of height by sex, 0.05)
 Configuration:
 	C0:
 
