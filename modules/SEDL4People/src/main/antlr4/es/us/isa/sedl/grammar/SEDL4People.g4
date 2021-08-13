@@ -299,7 +299,7 @@ configuration: CONFIGURATION COLON configurationBlock+;
 
 configurationBlock: id COLON singleConf;
 
-singleConf: inputs? outputs? settings? experimentalProcedure execution?;
+singleConf: inputs? outputs? settings? experimentalProcedure? execution?;
 	
 inputs: INPUTS COLON files (COMMA files)*;
 	
@@ -309,7 +309,7 @@ files: file roles? format? mapping?;
 
 file: FILE StringLiteral;
 
-roles: ROLE COLON (MISCELLANEOUS | MAIN_RESULT | ADDITIONAL_EVIDENCE);
+roles: ROLE COLON (MISCELLANEOUS | MAIN_RESULT| MAIN_RESULT2 | ADDITIONAL_EVIDENCE);
 
 format: FORMAT COLON id;
 
@@ -632,6 +632,7 @@ POSTPROCESSING: 'Postprocessing';
 //---------
 
 MAIN_RESULT : 'MainResult';
+MAIN_RESULT2 : 'MAIN_RESULT';
 ADDITIONAL_EVIDENCE : 'AdditionalEvidence';
 MISCELLANEOUS : 'Miscellaneous'; 
 

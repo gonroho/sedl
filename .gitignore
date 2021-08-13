@@ -16,3 +16,4 @@ hs_err_pid*
 /modules/SEDLModuleManager/target/
 /modules/jLibSEDL/target/
 /modules/SEDL4JSON/nbproject/
+/modules/SEDL-core/generated

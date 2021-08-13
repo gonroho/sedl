@@ -2,6 +2,7 @@ package es.us.isa.sedl.marshaller;
 
 import static es.us.isa.sedl.grammar.SEDL4PeopleParser.ADDITIONAL_EVIDENCE;
 import static es.us.isa.sedl.grammar.SEDL4PeopleParser.MAIN_RESULT;
+import static es.us.isa.sedl.grammar.SEDL4PeopleParser.MAIN_RESULT2;
 import static es.us.isa.sedl.grammar.SEDL4PeopleParser.MISCELLANEOUS;
 import static es.us.isa.sedl.grammar.SEDL4PeopleParser.tokenNames;
 
@@ -924,10 +925,29 @@ public class SEDL4PeopleExtendedListener extends SEDL4PeopleBaseListener {
                 if (errorListener != null) {
                     errorListener.getErrors().add(error);
                 }
-            }
+            }else
+            	vars.add(var);
             if (var instanceof Outcome) {
+            	SEDL4PeopleError error = new SEDL4PeopleError(idCtx.Identifier().getSymbol().getLine() - 1,
+                        idCtx.Identifier().getSymbol().getStartIndex(),
+                        idCtx.Identifier().getSymbol().getStopIndex(),
+                        es.us.isa.sedl.core.util.Error.ERROR_SEVERITY.ERROR,
+                        "The variable " + idCtx.getText() + " is an outcome, "
+                        + "you shuld not generate a set of groups based on its value.");
+                if (errorListener != null) {
+                    errorListener.getErrors().add(error);
+                }
             }
             if (var instanceof Nuisance) {
+            	SEDL4PeopleError error = new SEDL4PeopleError(idCtx.Identifier().getSymbol().getLine() - 1,
+                        idCtx.Identifier().getSymbol().getStartIndex(),
+                        idCtx.Identifier().getSymbol().getStopIndex(),
+                        es.us.isa.sedl.core.util.Error.ERROR_SEVERITY.ERROR,
+                        "The variable " + idCtx.getText() + " is a nuisance, "
+                        + "you shuld not generate a set of groups based on its value.");
+                if (errorListener != null) {
+                    errorListener.getErrors().add(error);
+                }
             }
         }
         int sizing = Integer.parseInt(ctx.sizingSentence().IntegerLiteral().toString());
@@ -1228,7 +1248,7 @@ public class SEDL4PeopleExtendedListener extends SEDL4PeopleBaseListener {
                     if (roleType.equals(tokenNames[MISCELLANEOUS].replace("'", ""))) {
                         outSource.setRole(OutputDataSourceRole.MISCELLANEOUS);
                     }
-                    if (roleType.equals(tokenNames[MAIN_RESULT].replace("'", ""))) {
+                    if (roleType.equals(tokenNames[MAIN_RESULT].replace("'", "")) || roleType.equals(tokenNames[MAIN_RESULT2].replace("'", ""))) {
                         outSource.setRole(OutputDataSourceRole.MAIN_RESULT);
                     } else {
                         System.out.println("Specified role does not exist : " + roleType + "(" + rolesCtx.getChild(2).getText() + ")");

@@ -66,15 +66,7 @@
     </dependencies>
     <build>
        
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
-                <configuration>                    
-                    <compilerArgument>-XDignore.symbol.file=true</compilerArgument>
-                </configuration>
-            </plugin>     
+        <plugins>     
             <!-- We analyze classpath and save the metadata in order to enhance bootstrapint 
                 time when using reflections
             <plugin>

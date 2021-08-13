@@ -9,7 +9,7 @@ Design :
 	Sampling : Random
 	Assignment : Random
 	Groups : 
-		by  sizing 25
+		by sex sizing 25
 	Protocol : Random
 	Analyses :
 	A-1:

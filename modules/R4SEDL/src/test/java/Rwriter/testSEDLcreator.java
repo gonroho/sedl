@@ -51,8 +51,8 @@ public class testSEDLcreator {
 //		File f = new File("C:/Users/user/git/sedl/modules/R4SEDL/src/main/resources/SEDLfiles/test1.sedl");
 		System.out.println(f.getAbsolutePath());
 		System.out.println(es.us.isa.sedl.jlibsedl.JLibSEDL.isSEDL(f)+"\n");
-//        SEDLDocument result = null;
-//        result = es.us.isa.sedl.jlibsedl.JLibSEDL.readDocument(f);
+		SEDLDocument result = null;
+		result = es.us.isa.sedl.jlibsedl.JLibSEDL.readDocument(f);
         
 		SEDL4PeopleUnmarshaller unmash = new SEDL4PeopleUnmarshaller();
 		ControlledExperiment experiment = (ControlledExperiment) unmash.fromString(usingBufferedReader(f.getPath()));
@@ -69,7 +69,10 @@ public class testSEDLcreator {
         generateSEDLfile(experiment3);
         
         System.out.println("Archivos generados");
-
+        
+        File f2=new File(basePath+File.separator+experiment3.getName()+".sedl");
+        ControlledExperiment experiment4 = (ControlledExperiment) unmash.fromString(usingBufferedReader(f2.getPath()));
+        System.out.println("Unmarshalled equals original:"+experiment3.equals(experiment4));
 	}
 	public static ControlledExperiment addDataset (ControlledExperiment e, String Path) {
 		//El marshaller solo Imprime el nombre del Archivo, no el Path
@@ -100,7 +103,7 @@ public class testSEDLcreator {
 		ControlledExperiment e1 = (ControlledExperiment) e.clone();
 		Nhst n = new Nhst();
 		n.setAlpha(0.05);
-		n.setName("T-Student");
+		n.setName("T-student");
 		
 		GroupingProjection gp = new GroupingProjection();
 		
