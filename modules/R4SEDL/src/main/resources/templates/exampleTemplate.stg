@@ -15,3 +15,22 @@ noFilter(fun, outvar) ::= <<
 <fun>(data$<outvar>)
 
 >>
+TStudentBy2(varBy,confLvl, outvar,enum1,enum2) ::= <<
+t.test(data[ which(data$<varBy>=='<enum1>'),]$<outvar>,data[ which(data$<varBy>=='<enum2>'),]$<outvar>,conf.level = <confLvl>)
+
+>>
+ANOVA(varBy, outvar) ::= <<
+aov(<outvar> ~ <varBy>, data = data)
+
+>>
+correlation(x, y, method) ::= <<
+M <-cor(<x>, <y>, method = c("<method>"))
+M
+corrplot(M, type="upper", order="hclust",
+         col=brewer.pal(n=8, name="RdYlBu"))
+ggscatter(mtcars, x = "<x>", y = "<y>", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "<method>",
+          xlab = "Miles/(US) gallon", ylab = "Weight (1000 lbs)")
+>>
+

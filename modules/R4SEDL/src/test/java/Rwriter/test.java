@@ -34,7 +34,7 @@ public class test {
 	static String fileName = "C:\\Users\\user\\git\\sedl\\modules\\R4SEDL\\src\\main\\resources\\scriptsR\\test.r";
 	
 	public static void main(String[] args) throws IOException {
-		executeR(); 
+		test6(); 
 		
 	}
 	public static void executeR() throws IOException {
@@ -252,7 +252,8 @@ public class test {
 //        ----------------------------- Funciones --------------------------- 
         
         StatisticalAnalysisSpec a=(StatisticalAnalysisSpec) design.getExperimentalDesign().getIntendedAnalyses().get(0);
-        
+        StatisticalAnalysisSpec a1=(StatisticalAnalysisSpec) design.getExperimentalDesign().getIntendedAnalyses().get(1);
+        System.out.println(a1.getStatistic().get(0).getClass().getSimpleName());
 //        List<String> funs= new ArrayList<String>();
         List<String> rfuns= new ArrayList<String>();
         List<Statistic>lista2 = a.getStatistic();

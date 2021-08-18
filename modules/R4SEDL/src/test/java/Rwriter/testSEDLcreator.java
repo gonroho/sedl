@@ -19,7 +19,11 @@ import es.us.isa.sedl.core.EmpiricalStudy;
 import es.us.isa.sedl.core.analysis.datasetspecification.DatasetSpecification;
 import es.us.isa.sedl.core.analysis.datasetspecification.GroupingProjection;
 import es.us.isa.sedl.core.analysis.datasetspecification.Projection;
+import es.us.isa.sedl.core.analysis.statistic.InterquartileRange;
+import es.us.isa.sedl.core.analysis.statistic.Median;
+import es.us.isa.sedl.core.analysis.statistic.Mode;
 import es.us.isa.sedl.core.analysis.statistic.Nhst;
+import es.us.isa.sedl.core.analysis.statistic.Range;
 import es.us.isa.sedl.core.analysis.statistic.Statistic;
 import es.us.isa.sedl.core.analysis.statistic.StatisticalAnalysisSpec;
 import es.us.isa.sedl.core.configuration.Configuration;
@@ -47,12 +51,12 @@ public class testSEDLcreator {
 //  no reconoce el archivo Bernarde2014 como SEDL
 	public static void main(String[] args) throws IOException {
 		File f = new File("./src/main/resources/SEDLfiles/HeightExperimentNoNhst.SEDL");
-
+		
 //		File f = new File("C:/Users/user/git/sedl/modules/R4SEDL/src/main/resources/SEDLfiles/test1.sedl");
-		System.out.println(f.getAbsolutePath());
+		
 		System.out.println(es.us.isa.sedl.jlibsedl.JLibSEDL.isSEDL(f)+"\n");
-		SEDLDocument result = null;
-		result = es.us.isa.sedl.jlibsedl.JLibSEDL.readDocument(f);
+        SEDLDocument result = null;
+        result = es.us.isa.sedl.jlibsedl.JLibSEDL.readDocument(f);
         
 		SEDL4PeopleUnmarshaller unmash = new SEDL4PeopleUnmarshaller();
 		ControlledExperiment experiment = (ControlledExperiment) unmash.fromString(usingBufferedReader(f.getPath()));
@@ -62,17 +66,35 @@ public class testSEDLcreator {
         ControlledExperiment experiment1 = addDataset(experiment, sourcePath);      
         ControlledExperiment experiment2 = addTStudent(experiment1);
         ControlledExperiment experiment3 = addANOVA(experiment2);
+        ControlledExperiment expDescriptive = addDescriptive(experiment3);
         
         experiment1.setName("HeightDatasetAdded");
         generateSEDLfile(experiment1);
         experiment3.setName("HeightNhstAdded");
         generateSEDLfile(experiment3);
+        expDescriptive.setName("DescExample");
+        generateSEDLfile(expDescriptive);
         
         System.out.println("Archivos generados");
         
+
         File f2=new File(basePath+File.separator+experiment3.getName()+".sedl");
         ControlledExperiment experiment4 = (ControlledExperiment) unmash.fromString(usingBufferedReader(f2.getPath()));
         System.out.println("Unmarshalled equals original:"+experiment3.equals(experiment4));
+
+	}
+	private static ControlledExperiment addDescriptive(ControlledExperiment experiment) {
+		ControlledExperiment e = (ControlledExperiment) experiment.clone();
+		Median m = new Median();
+		Mode m2 = new Mode();
+		InterquartileRange v = new InterquartileRange();
+		Range r = new Range();
+		StatisticalAnalysisSpec s= (StatisticalAnalysisSpec) e.getDesign().getExperimentalDesign().getIntendedAnalyses().get(1);
+		s.getStatistic().add(m);
+		s.getStatistic().add(m2);
+		s.getStatistic().add(v);
+		s.getStatistic().add(r);
+		return e;
 	}
 	public static ControlledExperiment addDataset (ControlledExperiment e, String Path) {
 		//El marshaller solo Imprime el nombre del Archivo, no el Path
