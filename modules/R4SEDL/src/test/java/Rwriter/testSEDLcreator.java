@@ -19,6 +19,8 @@ import es.us.isa.sedl.core.EmpiricalStudy;
 import es.us.isa.sedl.core.analysis.datasetspecification.DatasetSpecification;
 import es.us.isa.sedl.core.analysis.datasetspecification.GroupingProjection;
 import es.us.isa.sedl.core.analysis.datasetspecification.Projection;
+import es.us.isa.sedl.core.analysis.statistic.CorrelationCoeficient;
+import es.us.isa.sedl.core.analysis.statistic.CorrelationValue;
 import es.us.isa.sedl.core.analysis.statistic.InterquartileRange;
 import es.us.isa.sedl.core.analysis.statistic.Median;
 import es.us.isa.sedl.core.analysis.statistic.Mode;
@@ -67,6 +69,7 @@ public class testSEDLcreator {
         ControlledExperiment experiment2 = addTStudent(experiment1);
         ControlledExperiment experiment3 = addANOVA(experiment2);
         ControlledExperiment expDescriptive = addDescriptive(experiment3);
+        ControlledExperiment expCorrelations = addCorrelations(expDescriptive);
         
         experiment1.setName("HeightDatasetAdded");
         generateSEDLfile(experiment1);
@@ -74,14 +77,17 @@ public class testSEDLcreator {
         generateSEDLfile(experiment3);
         expDescriptive.setName("DescExample");
         generateSEDLfile(expDescriptive);
+        expCorrelations.setName("CorrExample");
+        generateSEDLfile(expCorrelations);
         
         System.out.println("Archivos generados");
         
 
-        File f2=new File(basePath+File.separator+experiment3.getName()+".sedl");
-        ControlledExperiment experiment4 = (ControlledExperiment) unmash.fromString(usingBufferedReader(f2.getPath()));
-        System.out.println("Unmarshalled equals original:"+experiment3.equals(experiment4));
+//        File f2=new File(basePath+File.separator+experiment3.getName()+".sedl");
+//        ControlledExperiment experiment4 = (ControlledExperiment) unmash.fromString(usingBufferedReader(f2.getPath()));
+//        System.out.println("Unmarshalled equals original:"+experiment3.equals(experiment4));
 
+        
 	}
 	private static ControlledExperiment addDescriptive(ControlledExperiment experiment) {
 		ControlledExperiment e = (ControlledExperiment) experiment.clone();
@@ -89,7 +95,7 @@ public class testSEDLcreator {
 		Mode m2 = new Mode();
 		InterquartileRange v = new InterquartileRange();
 		Range r = new Range();
-		StatisticalAnalysisSpec s= (StatisticalAnalysisSpec) e.getDesign().getExperimentalDesign().getIntendedAnalyses().get(1);
+		StatisticalAnalysisSpec s= (StatisticalAnalysisSpec) e.getDesign().getExperimentalDesign().getIntendedAnalyses().get(0);
 		s.getStatistic().add(m);
 		s.getStatistic().add(m2);
 		s.getStatistic().add(v);
@@ -181,6 +187,34 @@ public class testSEDLcreator {
 			e1.getDesign().getExperimentalDesign().getIntendedAnalyses().add(s);
 		}
 		e1.getDesign().getExperimentalDesign().getIntendedAnalyses().get(1).setId("NHST");
+		return e1;
+	}
+	public static ControlledExperiment addCorrelations (ControlledExperiment e) {
+		ControlledExperiment e1 = (ControlledExperiment) e.clone();
+		
+		CorrelationCoeficient c = new CorrelationCoeficient();
+		c.setName("Pearson");
+		
+//		GroupingProjection gp = new GroupingProjection();
+//		
+//		gp.getProjectedVariables().add("weight");
+		
+		DatasetSpecification ds = new DatasetSpecification();
+//no se puede añadir a las groupingProjections. El getGrouping crea una copia (snapshot)
+		
+		
+		Projection pr = new Projection();
+		pr.getProjectedVariables().add("height");
+		pr.getProjectedVariables().add("weight");
+		ds.getProjections().add(pr);
+		//ds.getProjections().add(gp);
+		c.setDatasetSpecification(ds);
+		
+		StatisticalAnalysisSpec s = new StatisticalAnalysisSpec();
+		
+		s.getStatistic().add(c);
+		e1.getDesign().getExperimentalDesign().getIntendedAnalyses().add(s);
+		e1.getDesign().getExperimentalDesign().getIntendedAnalyses().get(2).setId("Correlations");
 		return e1;
 	}
 	public static void generateSEDLfile (ControlledExperiment e) throws IOException {

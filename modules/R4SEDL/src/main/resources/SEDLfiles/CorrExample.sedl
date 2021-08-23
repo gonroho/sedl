@@ -1,0 +1,31 @@
+EXPERIMENT: HeightExperiment version: 1.0 
+Variables :
+	Factors :
+		sex enum 'men', 'women'
+		weight float
+	Outcome :
+		height float 
+Hypothesis: 	H2: Differential
+Design :
+	Sampling : Random
+	Assignment : Random
+	Groups : 
+		by sex sizing 25
+	Protocol : Random
+	Analyses :
+	A-1:
+		Avg()
+		Avg(height )
+		Avg(where sex='men' )
+		StdDev()
+		Median()
+		Mode()
+		IQR()
+		Range()
+	NHST:
+		T-student(by sex, 0.05)
+		ANOVA( of height by sex, 0.05)
+	Correlations:
+		Pearson(of height,weight)
+		Spearman(of height,weight)
+

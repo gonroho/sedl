@@ -18,7 +18,7 @@ import es.us.sedl.marshaller.R4SEDLMarshaller;
 public class marshallerTest {
 
 	public static void main(String[] args) throws IOException {
-		File f = new File("./src/main/resources/SEDLfiles/HeightExperimentNoNhst.SEDL");
+		File f = new File("./src/main/resources/SEDLfiles/CorrExample.SEDL");
         System.out.println(es.us.isa.sedl.jlibsedl.JLibSEDL.isSEDL(f)+"\n");
         SEDLDocument result = null;
         result = es.us.isa.sedl.jlibsedl.JLibSEDL.readDocument(f);
@@ -26,7 +26,7 @@ public class marshallerTest {
         ControlledExperiment experiment = (ControlledExperiment) result.getExperiment(); 
         
         es.us.isa.sedl.core.configuration.File source= new es.us.isa.sedl.core.configuration.File();
-        source.setPath("C:/Users/user/Desktop/examples/dataset.csv");
+        source.setPath("C:/Users/user/Desktop/examples/dataset2.csv");
         List<OutputDataSource> outputDataSources = new ArrayList<OutputDataSource>();
         OutputDataSource fuente = new OutputDataSource();
         fuente.setFile(source);
@@ -39,7 +39,8 @@ public class marshallerTest {
         experiment.getConfigurations().add(config);
         
 		R4SEDLMarshaller r  = new R4SEDLMarshaller();
-		r.toRScript(experiment, "C:\\Users\\user\\git\\sedl\\modules\\R4SEDL\\src\\main\\resources\\test2.r", false);
+		r.toRScript(experiment, "C:\\Users\\user\\git\\sedl\\modules\\R4SEDL\\src\\main\\resources\\scriptsR\\test.r", true);
+	
 	}
 
 }

@@ -9,8 +9,8 @@ Outcome:
 Hypothesis: Differential    
 
 Design:
- Sampling: Random 
- Assignment : Random 
+ Sampling: Random   
+ Assignment : Random
  Groups: by sex sizing 25
  Protocol: Random
  Analyses:                  

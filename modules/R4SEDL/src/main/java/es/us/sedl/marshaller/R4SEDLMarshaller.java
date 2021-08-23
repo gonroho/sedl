@@ -18,6 +18,7 @@ import org.stringtemplate.v4.STGroupFile;
 
 import es.us.isa.sedl.core.ControlledExperiment;
 import es.us.isa.sedl.core.EmpiricalStudy;
+import es.us.isa.sedl.core.analysis.statistic.CorrelationCoeficient;
 import es.us.isa.sedl.core.analysis.statistic.Nhst;
 import es.us.isa.sedl.core.analysis.statistic.Statistic;
 import es.us.isa.sedl.core.analysis.statistic.StatisticalAnalysisSpec;
@@ -68,7 +69,7 @@ public class R4SEDLMarshaller implements SEDLMarshaller{
         String path="";
         for (int i=0;i<experiment.getConfigurations().size();i++) {
         	for (int n=0;n<experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().size();n++) {
-            	if (!experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getFile().getPath().isEmpty()&&experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getRole()==OutputDataSourceRole.MAIN_RESULT) {
+        		if (!experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getFile().getPath().isEmpty()&&experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getRole()==OutputDataSourceRole.MAIN_RESULT) {
             		path = experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getFile().getPath();
                     
                     // Pick the correct template
@@ -95,10 +96,17 @@ public class R4SEDLMarshaller implements SEDLMarshaller{
 			StatisticalAnalysisSpec a = (StatisticalAnalysisSpec) design.getExperimentalDesign().getIntendedAnalyses()
 					.get(i);
 			if (a!=null) {
-				if (!a.getStatistic().get(0).getClass().getSimpleName().equals("Nhst")) {
-					res += renderStatisticalAnalysis(a, stGroup, outvars);
-				}else {
+				if (a.getStatistic().get(0).getClass().getSimpleName().equals("Nhst")) {
 					res += renderNhst(a,stGroup, design, outvars);
+					
+				}else if (a.getStatistic().get(0).getClass().getSimpleName().equals("CorrelationCoeficient")) {
+					res = "library(corrplot)\r\n"
+							+ "library(RColorBrewer)\r\n"
+									+ "library(\"ggpubr\")\n"+res;
+					res += renderCorr(a,stGroup, design);
+				}
+				else {
+					res += renderStatisticalAnalysis(a, stGroup, outvars);
 				}
 			}
 		}
@@ -129,7 +137,7 @@ public class R4SEDLMarshaller implements SEDLMarshaller{
 				System.out.println(s);
 			}
 			// Read any errors from the attempted command
-			System.out.println("Here is the standard error of the command (if any):\n");
+			System.out.println("\n ------------------ \n Here is the standard error of the command (if any):\n");
 			while ((s = stdError.readLine()) != null) {
 				System.out.println(s);
 			} 
@@ -258,7 +266,6 @@ public class R4SEDLMarshaller implements SEDLMarshaller{
         String newKey = "";
         for (int i=0;i<list.size();i++) {        	
         	Nhst nhst = (Nhst) list.get(i);
-        	System.out.println(nhst.getName());
         	Double confLvl = 0.95;
         	if((Double) nhst.getAlpha() != null) {
         		confLvl = 1-nhst.getAlpha();
@@ -289,7 +296,35 @@ public class R4SEDLMarshaller implements SEDLMarshaller{
 				render = ANOVA.render();
 			}
         	res += render;
-			System.out.println(confLvl);
+        }
+		
+        	
+        // TODO Auto-generated method stub
+		return res;
+	}
+	private String renderCorr(StatisticalAnalysisSpec a, STGroup stGroup, Design design) {
+		List<Statistic>list = a.getStatistic();
+        String res="";
+        
+        //muestra las variables, no tiene uso, seccion de control
+        List<String> vars= new ArrayList<String>();
+
+
+        for (int i=0;i<list.size();i++) {        	
+        	CorrelationCoeficient corr = (CorrelationCoeficient) list.get(i);
+        	vars = corr.getDatasetSpecification().getProjections().get(0).getProjectedVariables();
+        	
+        	String render="";
+        	String plotname =design.hashCode()+corr.getName() + "0"+i;
+			final ST Correlation = stGroup.getInstanceOf("CorrelationPDF");
+			Correlation.add("x", vars.get(0));
+			Correlation.add("y", vars.get(1));
+			Correlation.add("method", corr.getName().toLowerCase());
+			Correlation.add("path", "./src/main/resources/resPlots");
+			Correlation.add("plotname", plotname);
+			render = Correlation.render();
+			
+        	res += render;
         }
 		
         	

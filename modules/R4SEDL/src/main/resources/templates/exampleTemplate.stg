@@ -23,14 +23,18 @@ ANOVA(varBy, outvar) ::= <<
 aov(<outvar> ~ <varBy>, data = data)
 
 >>
-correlation(x, y, method) ::= <<
-M <-cor(<x>, <y>, method = c("<method>"))
+CorrelationPDF(x, y, method, path, plotname) ::= <<
+pdf(file = "<path>/Plot<plotname>.pdf",
+    width = 8,
+    height = 6) 
+M \<-cor(data$<x>, data$<y>, method = c("<method>"))
 M
-corrplot(M, type="upper", order="hclust",
-         col=brewer.pal(n=8, name="RdYlBu"))
-ggscatter(mtcars, x = "<x>", y = "<y>", 
+ggscatter(data, x = "<x>", y = "<y>", 
           add = "reg.line", conf.int = TRUE, 
           cor.coef = TRUE, cor.method = "<method>",
-          xlab = "Miles/(US) gallon", ylab = "Weight (1000 lbs)")
+          xlab = "<x>", ylab = "<y>")
+dev.off()
+print("Resulting plots saved in PDF format in <path>")
+
 >>
 
