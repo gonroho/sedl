@@ -1,0 +1,16 @@
+EXPERIMENT: HeightExperiment version:1.0
+Variables:
+Factors:
+    sex enum "men","women"
+	weight float
+Outcome:
+   height in R  
+Hypothesis: Differential    
+Design:
+ Sampling: Random   
+ Assignment : Random
+ Groups: by sex sizing 25
+ Protocol: Random
+ Analyses:                  
+    A-1:
+		Pearson(of height,weight)

@@ -15,7 +15,7 @@ Design :
 	Analyses :
 	A-1:
 		Avg()
-		Avg(height )
+		Avg(sex )
 		Avg(where sex='men' )
 		StdDev()
 		Median()

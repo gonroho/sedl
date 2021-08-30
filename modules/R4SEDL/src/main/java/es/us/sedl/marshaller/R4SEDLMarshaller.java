@@ -47,16 +47,6 @@ public class R4SEDLMarshaller implements SEDLMarshaller{
         
         Design design= experiment.getDesign();
         
-        //muestra las variables, no tiene uso, seccion de control
-//        List<String> vars= new ArrayList<String>();
-//        
-//        List<Variable>lista = design.getVariables().getVariables();
-//        for (int i=0;i<lista.size();i++) {
-//        	vars.add(lista.get(i).getName());
-//        	//coge los valores de una variable enumerada
-//        	lista.get(i).getDomain().getLevels().get(0).getValue();
-//        }
-        
         List<String> outvars= new ArrayList<String>();
         
         //lista entera
@@ -69,7 +59,8 @@ public class R4SEDLMarshaller implements SEDLMarshaller{
         String path="";
         for (int i=0;i<experiment.getConfigurations().size();i++) {
         	for (int n=0;n<experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().size();n++) {
-        		if (!experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getFile().getPath().isEmpty()&&experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getRole()==OutputDataSourceRole.MAIN_RESULT) {
+        		if (!experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getFile().getPath().isEmpty()
+        				&&experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getRole()==OutputDataSourceRole.MAIN_RESULT) {
             		path = experiment.getConfigurations().get(i).getExperimentalOutputs().getOutputDataSources().get(n).getFile().getPath();
                     
                     // Pick the correct template
@@ -232,7 +223,7 @@ public class R4SEDLMarshaller implements SEDLMarshaller{
 		return res;
     }
 	
-	private String renderNhst(StatisticalAnalysisSpec a, STGroup stGroup, Design design, List<String> outvars) {
+	public String renderNhst(StatisticalAnalysisSpec a, STGroup stGroup, Design design, List<String> outvars) {
 		List<Statistic>list = a.getStatistic();
         String res="";
         
@@ -302,7 +293,8 @@ public class R4SEDLMarshaller implements SEDLMarshaller{
         // TODO Auto-generated method stub
 		return res;
 	}
-	private String renderCorr(StatisticalAnalysisSpec a, STGroup stGroup, Design design) {
+	
+	public String renderCorr(StatisticalAnalysisSpec a, STGroup stGroup, Design design) {
 		List<Statistic>list = a.getStatistic();
         String res="";
         
